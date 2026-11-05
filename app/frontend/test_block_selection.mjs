@@ -1,0 +1,10 @@
+import assert from 'node:assert/strict';
+import {automaticBlocks,blockKey,expandBlocks,shrinkBlocks} from './block_selection.js';
+assert.deepEqual(automaticBlocks({mapping:[{block_ijk:[1,1,1],fraction:0.2}]}),[[1,1,1]]);
+assert.deepEqual(automaticBlocks({mapping:{inside:true,block_ijk:[0,0,0]}}),[[0,0,0]]);
+const grown=expandBlocks([[1,1,1]]);
+assert.equal(grown.length,7);
+assert(grown.some(x=>blockKey(x)==='2,1,1'));
+assert.deepEqual(shrinkBlocks(grown),[[1,1,1]]);
+assert.equal(expandBlocks([[0,0,0]]).length,4);
+console.log('JEPA block selection, six-neighbor expansion and contraction: PASS');

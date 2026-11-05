@@ -1,0 +1,10 @@
+import assert from 'node:assert/strict';
+import {buildBlockMesh} from './block_mesh.js';
+const affine=[[1.5,0,0,-40],[0,2,0,-50],[0,0,3,-60],[0,0,0,1]];
+const mesh=buildBlockMesh({input_affine_ras:affine,block_shape_ijk:[16,16,16]},[[1,2,3]]);
+assert.equal(mesh.points.length,24);
+assert.equal(mesh.triangles.length,36);
+assert.equal(mesh.points[0],-40+(16-.5)*1.5);
+assert.equal(mesh.points[1],-50+(32-.5)*2);
+assert.equal(mesh.points[2],-60+(48-.5)*3);
+console.log('RAS-aligned JEPA block mesh geometry: PASS');

@@ -1,0 +1,9 @@
+{
+  "name": "lung-vol-jepa-annotator",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {"build": "vite build", "dev": "vite --host 127.0.0.1"},
+  "dependencies": {"@niivue/niivue": "0.69.0", "nifti-reader-js": "0.8.1"},
+  "devDependencies": {"vite": "6.3.5"}
+}

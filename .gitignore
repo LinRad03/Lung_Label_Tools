@@ -1,0 +1,17 @@
+.release_venv/
+/build/
+/dist/
+/release/
+/runtime/
+*.sqlite3
+*.sqlite3-*
+*.nii
+*.nii.gz
+*.dcm
+*.npz
+*.npy
+*.log
+__pycache__/
+*.pyc
+.DS_Store
+app/MANIFEST.csv
