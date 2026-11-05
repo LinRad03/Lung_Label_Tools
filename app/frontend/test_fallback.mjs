@@ -1,7 +1,13 @@
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import * as nifti from 'nifti-reader-js';
-import {createFallback, setFallbackMode, setFallbackWindow, setFallbackAnnotations, setFallbackZoom, focusFallback} from './fallback.js';
+import {createFallback, setFallbackMode, setFallbackWindow, setFallbackAnnotations, setFallbackZoom, focusFallback, displayXSign} from './fallback.js';
+
+// In RAS, +X is patient right. Radiological axial/coronal views place it on screen left.
+assert.equal(displayXSign(0, 1), -1);
+assert.equal(displayXSign(0, -1), 1);
+assert.equal(displayXSign(1, 1), 1);
+assert.equal(displayXSign(1, -1), -1);
 
 const bytes = readFileSync(process.argv[2]);
 globalThis.fetch = async () => ({ok: true, arrayBuffer: async () => bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength)});
@@ -26,6 +32,11 @@ const view = await createFallback(canvas, '/synthetic.nii.gz', meta, value => {p
 assert.deepEqual(view.shape, shape);
 assert.deepEqual(view.axes, [0, 1, 2]);
 assert.equal(view.mode, 'axial');
+handlers.pointerup({offsetX:400,offsetY:225});
+const patientRightOnScreenLeft=point[0];
+handlers.pointerup({offsetX:500,offsetY:225});
+const patientLeftOnScreenRight=point[0];
+assert(patientRightOnScreenLeft>patientLeftOnScreenRight);
 setFallbackMode(view, 'axial');
 setFallbackWindow(view, [-1000, 1000]);
 assert.deepEqual(view.window, [-1000, 1000]);

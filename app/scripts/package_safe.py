@@ -36,7 +36,7 @@ FORBIDDEN = (".nii", ".nii.gz", ".dcm", ".mha", ".npy", ".npz", ".pt", ".pth",
              ".ckpt", ".safetensors", ".pkl", ".sqlite3", ".db", ".log")
 IDENTIFIER = re.compile(rb"\b(?:\d{17}[0-9Xx]|\d{15})\b")
 SECRET = re.compile(rb"-----BEGIN [A-Z ]*PRIVATE KEY-----|(?:api[_-]?key|secret[_-]?key)\s*[:=]\s*['\"][^'\"]{8,}", re.I)
-TRUSTED_COMPILED_BUNDLE_SHA256 = "7e7778d3683c75dd592447d15b1f0478828a6061f07a528b97f623b04fb679cd"
+TRUSTED_COMPILED_BUNDLE_SHA256 = "a1ee076486d584e7b6b6666730c2f566f705290b0a53946f9f6c835d7da4d894"
 
 
 def allowed(rel: str) -> bool:

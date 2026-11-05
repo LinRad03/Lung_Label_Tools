@@ -122,8 +122,9 @@ async function workspace() {
   document.getElementById('lobe-legend').innerHTML=Object.values(LOBES).map(l=>`<span><i style="background:rgb(${l.color.join(',')})"></i>${l.name}</span>`).join('');
   try {
     if(localStorage.getItem('jepa_viewer_preference')==='cpu')throw Error('USER_SELECTED_CPU_VIEWER');
-    nv=new Niivue({crosshairColor:[1,0.65,0,0],show3Dcrosshair:false,backColor:[0,0,0,1],textHeight:0.025});
+    nv=new Niivue({crosshairColor:[1,0.65,0,0],show3Dcrosshair:false,backColor:[0,0,0,1],textHeight:0.025,isRadiologicalConvention:true});
     await nv.attachToCanvas(document.getElementById('gl'));
+    nv.setRadiologicalConvention(true);
     nv.setSliceType(nv.sliceTypeAxial);
     nv.setMultiplanarLayout(2);
     nv.setCornerOrientationText(true);

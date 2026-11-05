@@ -107,6 +107,20 @@ async def main():
                     raise RuntimeError("READONLY_CONTROLS_ACTIVE")
                 if await js("!!document.getElementById('skip')"):
                     raise RuntimeError("SKIP_OPTION_STILL_VISIBLE")
+                if os.environ.get("ANNOTATOR_ORIENTATION_QA") == "1":
+                    if await js("document.getElementById('render-mode').textContent") != "WebGL 阅片":
+                        raise RuntimeError("ORIENTATION_REQUIRES_WEBGL_SLICE")
+                    for offset in (-40, 40):
+                        spot = await js("(()=>{const m=document.getElementById('markup'),r=m.getBoundingClientRect(),c=JSON.parse(m.dataset.tileCenter);return {x:r.left+(c[0]/m.width)*r.width+" + str(offset) + ",y:r.top+(c[1]/m.height)*r.height}})()")
+                        await call("Input.dispatchMouseEvent", {"type":"mouseMoved","x":spot["x"],"y":spot["y"]})
+                        await asyncio.sleep(.12)
+                        value = await js("Number(document.getElementById('hover-coords').textContent.split('RAS mm ')[1]?.split(',')[0])")
+                        if offset < 0:
+                            patient_right = value
+                        else:
+                            patient_left = value
+                    if not patient_right > patient_left:
+                        raise RuntimeError("AXIAL_LEFT_RIGHT_MIRRORED")
                 if os.environ.get("ANNOTATOR_LAYOUT_QA") == "1":
                     layout = await js("(()=>{const r=document.getElementById('report-panel').getBoundingClientRect(),v=document.querySelector('.viewer').getBoundingClientRect(),t=document.querySelector('.task').getBoundingClientRect();return {width:innerWidth,reportRight:r.right,viewerLeft:v.left,viewerRight:v.right,taskLeft:t.left}})()")
                     if layout["width"] <= 1150 or layout["reportRight"] > layout["viewerLeft"] or layout["viewerRight"] > layout["taskLeft"]:
@@ -224,6 +238,7 @@ async def main():
                                   "graphics_backend":await js("document.getElementById('gpu-backend').textContent"),
                                   "prior_lesions":lesions,"automatic_jepa_blocks":"PASS","bulla_highlight":"PASS",
                                   "fine_annotation_subgrids":"PASS" if os.environ.get("ANNOTATOR_FINE_GRID_QA") == "1" else "NOT_TESTED",
+                                  "radiological_left_right":"PASS" if os.environ.get("ANNOTATOR_ORIENTATION_QA") == "1" else "NOT_TESTED",
                                   "block_revision_ui":"PASS" if os.environ.get("ANNOTATOR_REVISION_QA") == "1" else "NOT_TESTED",
                                   "cpu_to_3d_recovery":"PASS" if os.environ.get("ANNOTATOR_3D_RETRY_QA") == "1" else "NOT_TESTED",
                                   "review_progress":"PASS" if os.environ.get("ANNOTATOR_PROGRESS_QA") == "1" else "NOT_TESTED",

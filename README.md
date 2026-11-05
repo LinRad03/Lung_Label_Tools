@@ -1,6 +1,6 @@
 # Lung Label Tools
 
-Local research annotation tool for chest CT. It serves NIfTI volumes, linked reports and optional lobe pseudo masks through a browser at `127.0.0.1:8767` by default. It stores point/box marks in original CT RAS coordinates and shows 4³ JEPA model blocks alongside finer 16³/32³ **annotation** subgrids. No patient data or trained model weights are included in the release.
+Local research annotation tool for chest CT. It serves NIfTI volumes, linked reports and optional lobe pseudo masks through a browser at `127.0.0.1:8767` by default. It stores point/box marks in original CT RAS coordinates and shows 4³ JEPA model blocks alongside finer 16³/32³ **annotation** subgrids. Axial and coronal slices use radiological display convention: the patient's right appears on screen left. No patient data or trained model weights are included in the release.
 
 ## Downloads
 

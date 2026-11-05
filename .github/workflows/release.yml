@@ -31,10 +31,19 @@ jobs:
           cache-dependency-path: |
             requirements-runtime.txt
             requirements-build.txt
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: app/frontend/package-lock.json
       - name: Install runtime and builder
         run: python -m pip install -r requirements-runtime.txt -r requirements-build.txt
+      - name: Install frontend test dependencies
+        run: npm ci --prefix app/frontend
       - name: Run geometry tests
         run: python -m pytest -q app/tests/test_jepa_mapping.py
+      - name: Check clinical left-right display
+        run: python packaging/test_orientation.py
       - name: Build native artifact
         run: python packaging/build_release.py
       - name: Test packaged app with synthetic CT

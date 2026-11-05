@@ -121,6 +121,12 @@ function sample(view, index) {
   return value * slope + (view.header.scl_inter || 0);
 }
 
+// Radiological display: patient right (positive RAS X) is on screen left.
+// This changes only presentation. Original voxel and RAS annotation coordinates stay intact.
+export function displayXSign(physicalAxis, affineSign) {
+  return physicalAxis === 0 ? -Math.sign(affineSign) : Math.sign(affineSign);
+}
+
 function panes(view) {
   const specs = {
     axial: [0, 1, 2, '轴位'],
@@ -136,7 +142,7 @@ function panes(view) {
     const scale = Math.min((paneWidth - 12) / width, (paneHeight - 35) / height)*view.zoom;
     const drawWidth = width * scale, drawHeight = height * scale;
     return {name, label, xPhysicalAxis: xp, yPhysicalAxis: yp, slicePhysicalAxis: sp,
-      xSign: Math.sign(view.affine[xp][view.axes[xp]]), ySign: Math.sign(view.affine[yp][view.axes[yp]]),
+      xSign: displayXSign(xp, view.affine[xp][view.axes[xp]]), ySign: Math.sign(view.affine[yp][view.axes[yp]]),
       width, height, drawWidth, drawHeight,
       viewportLeft:k*paneWidth,viewportWidth:paneWidth,
       left: k * paneWidth + (paneWidth - drawWidth) / 2 + view.pan[0],
