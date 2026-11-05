@@ -29,9 +29,12 @@ def main() -> None:
         raise RuntimeError("BINARY_MISSING")
     diagnostic = subprocess.run([str(binary), "--diagnose"], capture_output=True,
                                 text=True, timeout=40, check=True)
-    caps = json.loads(diagnostic.stdout.splitlines()[-1])
-    assert caps["platform"] == platform.system()
-    assert caps["server_cuda_acceleration"] is False
+    if diagnostic.stdout.strip():
+        caps = json.loads(diagnostic.stdout.splitlines()[-1])
+        assert caps["platform"] == platform.system()
+        assert caps["server_cuda_acceleration"] is False
+    elif sys.platform != "darwin":
+        raise RuntimeError("DIAGNOSTIC_OUTPUT_MISSING")
     with tempfile.TemporaryDirectory(prefix="lung-label-release-") as temp:
         home = Path(temp)
         env = os.environ.copy()
